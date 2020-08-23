@@ -46,18 +46,6 @@ public static async Task<string[]> MultipleJobOrchestrator(
     return responses;
 }
 
-[FunctionName(nameof(GetJobStdoutAsync))]
-public static Task<string> GetJobStdoutAsync(
-    [ActivityTrigger] IDurableActivityContext context,
-    [AzureBatch(
-        AccountKey = "%BATCH_ACCOUNTKEY%", 
-        AccountName = "%BATCH_ACCOUNT_NAME%", 
-        AccountUrl = "%BATCH_ACCOUNT_URL%")] IAzureBatchJobService azureBatchJobService)
-{
-    var jobId = context.GetInput<string>();
-    return azureBatchJobService.GetStdOutStringAsync(context.GetJobId(jobId), "1");
-}
-
 [FunctionName(nameof(SayHelloInAzureBatch))]
 public static void SayHelloInAzureBatch(
     [ActivityTrigger] IDurableActivityContext createJobContext,
@@ -85,6 +73,18 @@ public static void SayHelloInAzureBatch(
         CommandLine = $"cmd /c echo Saying hello to {inputParameter}.",
         TaskId = "1"
     });
+}
+
+[FunctionName(nameof(GetJobStdoutAsync))]
+public static Task<string> GetJobStdoutAsync(
+    [ActivityTrigger] IDurableActivityContext context,
+    [AzureBatch(
+        AccountKey = "%BATCH_ACCOUNTKEY%", 
+        AccountName = "%BATCH_ACCOUNT_NAME%", 
+        AccountUrl = "%BATCH_ACCOUNT_URL%")] IAzureBatchJobService azureBatchJobService)
+{
+    var jobId = context.GetInput<string>();
+    return azureBatchJobService.GetStdOutStringAsync(context.GetJobId(jobId), "1");
 }
 ```
 
@@ -117,3 +117,4 @@ The code included in this repository is for demo purposes, before using this on 
 - Secure access to Azure Batch (instead of having the key as environment variable)
 - Improve the "job done" notification with retries and/or handling durable function not being available for a short time period (queue/event grid based)
 - Expose additional Azure Batch operations (packages, files, etc.)
+- Be able to terminate durable functions instances and the corresponding Batch jobs
