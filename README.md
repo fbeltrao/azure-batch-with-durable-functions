@@ -1,4 +1,4 @@
-# Azure Durable Functions orchestrating Azure Batch Jobs
+# Azure Durable Functions managing Azure Batch Jobs
 
 Sample demonstrating how to manage [Azure Batch](https://docs.microsoft.com/azure/batch/) jobs using [Azure Durable Functions](https://docs.microsoft.com/azure/azure-functions/durable/durable-functions-overview?tabs=csharp). The sample function has a simple orchestration interacting with Azure Batch, resuming work whenever the job is completed.
 
